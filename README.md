@@ -2,7 +2,7 @@
 TBlit is a pure rust library for dealing with alternate terminal buffer.
 
 When you initliaze the terminal it creats an alternate thread to deal with io.
-When you want to drow lock down the surface and draw to it and once its released the thread while draw it to the terminal.
+When you want to draw lock down the surface and draw to it and once its released the thread while draw it to the terminal.
 
 Supports any ANSI terminal.
 
