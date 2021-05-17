@@ -1,5 +1,5 @@
 [package]
-name = "TBlit"
+name = "tblit"
 version = "0.1.0"
 authors = ["FelixMo42 <felix@tacocat.com>"]
 edition = "2018"
