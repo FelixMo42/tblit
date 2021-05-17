@@ -5,6 +5,11 @@ pub struct Vec2 {
     pub x: isize,
     pub y: isize,
 }
+impl Vec2 {
+    pub fn new(x: isize, y: isize) -> Vec2 {
+        Vec2 { x, y }
+    }
+}
 
 impl Add for Vec2 {
     type Output = Vec2;
