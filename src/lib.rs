@@ -1,3 +1,5 @@
-mod term;
+#![feature(step_trait, step_trait_ext)]
 
-pub use term::*;
+pub mod vec2;
+pub mod screen;
+pub use termion::*;
