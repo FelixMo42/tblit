@@ -4,7 +4,7 @@ use termion::{input::{Events, MouseTerminal, TermRead}, raw::{IntoRawMode, RawTe
 
 type Input = MouseTerminal<AlternateScreen<RawTerminal<Stdout>>>;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct Color(u8, u8, u8);
 
 impl Color {
@@ -17,7 +17,7 @@ impl Color {
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct Style {
     fg: Color,
 }
