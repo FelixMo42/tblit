@@ -4,6 +4,24 @@ use termion::{input::{Events, MouseTerminal, TermRead}, raw::{IntoRawMode, RawTe
 
 type Input = MouseTerminal<AlternateScreen<RawTerminal<Stdout>>>;
 
+#[derive(Clone, Copy)]
+pub struct Color(u8, u8, u8);
+
+impl Color {
+    fn fg(&self) -> String {
+        format!("\x1b[38;2;{};{};{}m", self.0, self.1, self.2)
+    }
+
+    fn bg(&self) -> String {
+        format!("\x1b[48;2;{};{};{}m", self.0, self.1, self.2)
+    }
+}
+
+#[derive(Clone, Copy)]
+pub struct Style {
+    fg: Color,
+}
+
 pub struct Screen {
     // Size of Screen.
     pub size: Vec2<usize>,
@@ -12,7 +30,7 @@ pub struct Screen {
     pub mods: Option<Rect<usize>>,
 
     // The buffer of Screen data. 
-    pub chrs: Vec<char>,
+    pub chrs: Vec<(char, Style)>,
 
     pub out: Input
 }
@@ -34,16 +52,20 @@ impl Screen {
             Vec2::new(x as usize, y as usize)
         };
 
+        let style = Style {
+            fg: Color(0, 0, 0)
+        };
+
         return Screen {
             mods: None, 
-            chrs: vec![' ' ; size.x * size.y],
+            chrs: vec![(' ', style) ; size.x * size.y],
             size,
             out,
         };
     }
 
-    pub fn set(&mut self, chr: char, cord: &Vec2<usize>) {
-        self.chrs[self.size.index(cord)] = chr;
+    pub fn set(&mut self, chr: char, fg: Color, cord: &Vec2<usize>) {
+        self.chrs[self.size.index(cord)] = (chr, Style { fg });
         self.fit(cord);
     }
 
@@ -64,7 +86,8 @@ impl Screen {
                 for x in mods.0.x..mods.1.x + 1 {
 
                     // add the character to the line
-                    let chr = self.chrs[ self.size.index(&Vec2::new(x, y)) ];
+                    let (chr, style) = self.chrs[ self.size.index(&Vec2::new(x, y)) ];
+                    self.out.write(style.fg.fg().as_bytes()).unwrap();
                     self.out.write(&[chr as u8]).unwrap();
                 }
             }
