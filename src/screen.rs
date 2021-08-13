@@ -8,11 +8,11 @@ type Input = MouseTerminal<AlternateScreen<RawTerminal<Stdout>>>;
 pub struct Color(pub u8, pub u8, pub u8);
 
 impl Color {
-    fn fg(&self) -> String {
+    pub fn fg(&self) -> String {
         format!("\x1b[38;2;{};{};{}m", self.0, self.1, self.2)
     }
 
-    fn bg(&self) -> String {
+    pub fn bg(&self) -> String {
         format!("\x1b[48;2;{};{};{}m", self.0, self.1, self.2)
     }
 }
@@ -43,7 +43,7 @@ impl Screen {
         let mut out = MouseTerminal::from(out);
         
         // Hide the cursor.
-        out.write(termion::cursor::Hide.to_string().as_bytes()).unwrap();
+        self.hide_cursor();
         out.flush().unwrap();
 
         // Get the size of the terminal.
@@ -100,11 +100,23 @@ impl Screen {
     pub fn events(&self) -> Events<Stdin> {
         return stdin().events();
     }
+
+    pub fn show_cursor(&mut self) {
+        self.out.write(termion::cursor::Show.to_string().as_bytes()).unwrap();
+    }
+
+    pub fn hide_cursor(&mut self) {
+        self.out.write(termion::cursor::Hide.to_string().as_bytes()).unwrap();
+    }
+
+    pub fn move_cursor(&mut self, cord: &Vec2<usize>) {
+        self.out.write(termion::cursor::Goto((cord.x - 1) as u16, (cord.y - 1) as u16).to_string().as_bytes()).unwrap();
+    }
 }
 
 impl Drop for Screen {
     fn drop(&mut self) {
-        self.out.write(termion::cursor::Show.to_string().as_bytes()).unwrap();
+        self.show_cursor();
         self.out.flush().unwrap();
     }
 }
