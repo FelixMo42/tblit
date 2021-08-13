@@ -43,7 +43,7 @@ impl Screen {
         let mut out = MouseTerminal::from(out);
         
         // Hide the cursor.
-        self.hide_cursor();
+        out.write(termion::cursor::Hide.to_string().as_bytes()).unwrap();
         out.flush().unwrap();
 
         // Get the size of the terminal.
