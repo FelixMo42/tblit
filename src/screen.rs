@@ -110,7 +110,7 @@ impl Screen {
     }
 
     pub fn move_cursor(&mut self, cord: &Vec2<usize>) {
-        self.out.write(termion::cursor::Goto((cord.x - 1) as u16, (cord.y - 1) as u16).to_string().as_bytes()).unwrap();
+        self.out.write(termion::cursor::Goto((cord.x + 1) as u16, (cord.y + 1) as u16).to_string().as_bytes()).unwrap();
     }
 }
 
