@@ -4,7 +4,7 @@ pub struct RGB(pub u8, pub u8, pub u8);
 
 ///
 #[derive(Default, Clone, PartialEq, Eq)]
-pub struct FgColor(RGB);
+pub struct FgColor(pub RGB);
 
 impl Style for FgColor {
     fn to_cmd(&self) -> String {
@@ -15,8 +15,8 @@ impl Style for FgColor {
 ///
 #[derive(Clone, PartialEq, Eq)]
 pub struct Color {
-    fg: RGB,
-    bg: RGB,
+    pub fg: RGB,
+    pub bg: RGB,
 }
 
 impl Style for Color {
