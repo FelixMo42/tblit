@@ -33,9 +33,9 @@ impl<T: Style + Clone> Screen<T> {
             let (x, y) = terminal_size().unwrap();
             Vec2::new(x as usize, y as usize)
         };
-
+        
         return Screen {
-            mods: None, 
+            mods: Some(Rect(Vec2::new(0, 0), size)), 
             chrs: vec![(' ', default_style) ; size.x * size.y],
             size,
             out,
