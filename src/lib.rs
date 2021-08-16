@@ -1,5 +1,11 @@
 #![feature(step_trait, step_trait_ext)]
 
-pub mod vec2;
-pub mod screen;
-pub use termion::*;
+mod vec2;
+mod screen;
+mod style;
+
+pub use vec2::*;
+pub use screen::*;
+pub use style::*;
+
+pub use termion::event;

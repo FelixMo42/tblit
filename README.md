@@ -12,30 +12,24 @@ pub use tblit::*;
 pub use tblit::event::{Event, MouseEvent};
 
 fn main() {
-    let term = Term::new();
-
-    {
-        let mut screen = term.screen.lock().unwrap();
-        for x in 0..term.size.x {
-            for y in 0..term.size.y {
-                let spot = &(x, y).into();
-                screen.set(spot, 'x');
-                screen.set_fg(spot, Color(0, 70, 0));
-            }
-        }
-    }
+    let term = Screen::new(Color {
+        fg: RGB(200, 200, 200),
+        bg: RGB(30, 30, 30),
+    });
 
     for event in term.events.iter() {
         match event {
             Event::Mouse(MouseEvent::Release(x, y)) => {
-                let mut screen = term.screen.lock().unwrap();
-                screen.set(&(x as isize - 1, y as isize - 1).into(), ' ');
+                screen.set(' ', Color {
+                    fg: RGB(200, 200, 200),
+                    bg: RGB(100, 100, 200)
+                });
+
+                screen.blit();
             },
             Event::Mouse(_) => {},
-            _ => term.kill()
+            _ => break,
         }
     }
-
-    term.handle.join().unwrap();
 }
 ```
