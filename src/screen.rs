@@ -29,15 +29,13 @@ impl<T: Style + Clone> Screen<T> {
         out.flush().unwrap();
 
         // Get the size of the terminal.
-        let size = {
-            let (x, y) = terminal_size().unwrap();
-            Vec2::new(x as usize, y as usize)
-        };
+        let (x, y) = terminal_size().unwrap();
+        let (x, y) = (x as usize, y as usize);
         
         return Screen {
-            mods: Some(Rect(Vec2::new(0, 0), size)), 
-            chrs: vec![(' ', default_style) ; size.x * size.y],
-            size,
+            mods: Some(Rect(Vec2::new(0, 0), Vec2::new(x - 1, y - 1))), 
+            chrs: vec![(' ', default_style) ; x * y],
+            size: Vec2::new(x, y),
             out,
         };
     }
@@ -57,12 +55,12 @@ impl<T: Style + Clone> Screen<T> {
 
     pub fn blit(&mut self) {
         if let Some(mods) = self.mods {
-            for y in mods.0.y..mods.1.y + 1 { 
+            for y in mods.0.y..=mods.1.y { 
                 // position the cursor at the start of the new line
                 self.out.write(format!("\x1b[{};{}H", y + 1, 1).as_bytes()).unwrap();
 
                 // add the characters to the line, with their style
-                for x in mods.0.x..mods.1.x + 1 {
+                for x in mods.0.x..=mods.1.x {
                     let (chr, style) = &self.chrs[ self.size.index(&Vec2::new(x, y)) ];
                     self.out.write(style.to_cmd().as_bytes()).unwrap();
                     self.out.write(&[*chr as u8]).unwrap();
